@@ -1,0 +1,88 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ALL_STATES	main.c	/^    ALL_STATES \/* placeholder *\/$/;"	e	enum:States	file:
+ALL_TYPES	main.c	/^    ALL_TYPES \/* placeholder *\/$/;"	e	enum:PrjTypes	file:
+CC	Makefile	/^CC=gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS=-Wall -Wextra -pedantic -g$/;"	m
+COEF	main.c	/^    COEF,$/;"	e	enum:PrjTypes	file:
+DECIMAL	strongtypes.h	/^    DECIMAL$/;"	e	enum:TypeCategory
+Decimal	strongtypes.h	/^typedef ValueStore Decimal;$/;"	t
+HUGE	main.c	/^    HUGE,$/;"	e	enum:PrjTypes	file:
+INTEGER	strongtypes.h	/^    INTEGER,$/;"	e	enum:TypeCategory
+KHZ	main.c	/^    KHZ,$/;"	e	enum:PrjTypes	file:
+LEVEL	main.c	/^    LEVEL,$/;"	e	enum:PrjTypes	file:
+LFLAGS	Makefile	/^LFLAGS=-lm$/;"	m
+NOMINAL	strongtypes.h	/^    NOMINAL, \/* can only be compared *\/$/;"	e	enum:TypeCategory
+OFF	main.c	/^    OFF,$/;"	e	enum:States	file:
+ON	main.c	/^    ON,$/;"	e	enum:States	file:
+POWER	main.c	/^    POWER,$/;"	e	enum:PrjTypes	file:
+PrjTypes	main.c	/^enum PrjTypes {$/;"	g	file:
+STATE	main.c	/^    STATE,$/;"	e	enum:PrjTypes	file:
+States	main.c	/^enum States {$/;"	g	file:
+TARGET	Makefile	/^TARGET=tests$/;"	m
+TS_INCOMPATIBLE	strongtypes.h	/^    TS_INCOMPATIBLE$/;"	e	enum:TypeStatus
+TS_OK	strongtypes.h	/^    TS_OK,$/;"	e	enum:TypeStatus
+TS_OUTRANGE	strongtypes.h	/^    TS_OUTRANGE,$/;"	e	enum:TypeStatus
+TYPE_CONFIG	main.c	/^struct TypeConf TYPE_CONFIG[ALL_TYPES];$/;"	v	typeref:struct:TypeConf
+TYPE_DECIMAL_DIGITS	strongtypes.c	15;"	d	file:
+TYPE_DECIMAL_POWER	strongtypes.c	16;"	d	file:
+TYPE_STR_LEN	strongtypes.h	8;"	d
+TypeCategory	strongtypes.h	/^enum TypeCategory {$/;"	g
+TypeConf	strongtypes.h	/^struct TypeConf {$/;"	s
+TypeResult	strongtypes.h	/^struct TypeResult {$/;"	s
+TypeResult	strongtypes.h	/^typedef struct TypeResult TypeResult;$/;"	t	typeref:struct:TypeResult
+TypeStatus	strongtypes.h	/^enum TypeStatus {$/;"	g
+TypeValue	strongtypes.h	/^struct TypeValue {$/;"	s
+TypeValue	strongtypes.h	/^typedef struct TypeValue TypeValue;$/;"	t	typeref:struct:TypeValue
+ValueStore	strongtypes.h	/^typedef long long ValueStore;$/;"	t
+_GNU_SOURCE	strongtypes.c	6;"	d	file:
+category	strongtypes.h	/^    enum TypeCategory category;$/;"	m	struct:TypeConf	typeref:enum:TypeConf::TypeCategory
+config	strongtypes.c	/^static const struct TypeConf *config = NULL;$/;"	v	typeref:struct:TypeConf	file:
+config_len	strongtypes.c	/^static int config_len = 0;$/;"	v	file:
+decimal_div	strongtypes.c	/^TypeResult decimal_div(const TypeValue a, const TypeValue b)$/;"	f	file:
+decimal_mul	strongtypes.c	/^TypeResult decimal_mul(const TypeValue a, const TypeValue b)$/;"	f	file:
+init_typeconf	main.c	/^void init_typeconf()$/;"	f
+integer_mul	strongtypes.c	/^TypeResult integer_mul(const TypeValue a, const TypeValue b)$/;"	f	file:
+main	main.c	/^int main()$/;"	f
+out	strongtypes.h	/^    struct TypeValue out;$/;"	m	struct:TypeResult	typeref:struct:TypeResult::TypeValue
+precision	strongtypes.h	/^    int precision; \/* 0-6 *\/$/;"	m	struct:TypeConf
+range_max	strongtypes.h	/^    ValueStore range_max;$/;"	m	struct:TypeConf
+range_min	strongtypes.h	/^    ValueStore range_min;$/;"	m	struct:TypeConf
+status	strongtypes.h	/^    enum TypeStatus status;$/;"	m	struct:TypeResult	typeref:enum:TypeResult::TypeStatus
+str_decimals	strongtypes.c	/^void str_decimals(char *buf, const TypeValue tv)$/;"	f	file:
+test_coef	main.c	/^void test_coef()$/;"	f
+test_khz	main.c	/^void test_khz()$/;"	f
+test_level	main.c	/^void test_level()$/;"	f
+test_overflow	main.c	/^void test_overflow()$/;"	f
+test_state	main.c	/^void test_state()$/;"	f
+test_str	main.c	/^void test_str()$/;"	f
+type	strongtypes.h	/^    int type;$/;"	m	struct:TypeValue
+type_conf_dec	strongtypes.c	/^struct TypeConf type_conf_dec(Decimal min, Decimal max, int precision)$/;"	f
+type_conf_int	strongtypes.c	/^struct TypeConf type_conf_int(ValueStore min, ValueStore max)$/;"	f
+type_conf_nom	strongtypes.c	/^struct TypeConf type_conf_nom(int count)$/;"	f
+type_config	strongtypes.c	/^void type_config(const struct TypeConf *table, int len)$/;"	f
+type_dec	strongtypes.c	/^Decimal type_dec(double v)$/;"	f
+type_dec_decimals	strongtypes.c	/^int type_dec_decimals(const TypeValue tv)$/;"	f
+type_dec_units	strongtypes.c	/^int type_dec_units(const TypeValue tv)$/;"	f
+type_div	strongtypes.c	/^TypeResult type_div(const TypeValue a, const TypeValue b)$/;"	f
+type_float	strongtypes.c	/^double type_float(const TypeValue tv)$/;"	f
+type_init	strongtypes.c	/^TypeValue type_init(int type)$/;"	f
+type_int	strongtypes.c	/^ValueStore type_int(const TypeValue tv)$/;"	f
+type_mul	strongtypes.c	/^TypeResult type_mul(const TypeValue a, const TypeValue b)$/;"	f
+type_nom	strongtypes.c	/^int type_nom(const TypeValue tv)$/;"	f
+type_setd	strongtypes.c	/^TypeResult type_setd(const TypeValue tv, double val)$/;"	f
+type_seti	strongtypes.c	/^TypeResult type_seti(const TypeValue tv, ValueStore v)$/;"	f
+type_setn	strongtypes.c	/^TypeResult type_setn(const TypeValue tv, int name)$/;"	f
+type_str	strongtypes.c	/^void type_str(char *buf, const TypeValue tv)$/;"	f
+type_sum	strongtypes.c	/^TypeResult type_sum(const TypeValue a, const TypeValue b)$/;"	f
+type_type	strongtypes.c	/^int type_type(const TypeValue tv)$/;"	f
+validate_precision	strongtypes.c	/^bool validate_precision(int precision)$/;"	f	file:
+validate_range	strongtypes.c	/^bool validate_range(const TypeValue tv)$/;"	f	file:
+validate_type	strongtypes.c	/^bool validate_type(int type)$/;"	f	file:
+validate_value	strongtypes.c	/^bool validate_value(const TypeValue tv)$/;"	f	file:
+value	strongtypes.h	/^    ValueStore value;$/;"	m	struct:TypeValue
+value_sum	strongtypes.c	/^TypeResult value_sum(const TypeValue a, const TypeValue b)$/;"	f	file:
