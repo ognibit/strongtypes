@@ -18,3 +18,7 @@ release: CFLAGS=-Wall -Wextra -pedantic -g -std=c99 -O2 -DNDEBUG
 release: LFLAGS=-lm
 release: clean
 release: $(TARGET)
+
+lint:
+	cppcheck --enable=warning,style,performance,portability,unusedFunction .
+

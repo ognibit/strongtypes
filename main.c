@@ -39,6 +39,7 @@ void test_level()
 
     TypeResult rc;
     TypeValue lev = type_init(LEVEL);
+    assert(type_type(lev) == LEVEL);
 
     rc = type_setd(lev, 3.0);
     assert(rc.status == TS_INCOMPATIBLE);
@@ -97,6 +98,7 @@ void test_state()
 
     TypeResult rc;
     TypeValue st_on = type_init(STATE);
+    assert(type_type(st_on) == STATE);
 
     rc = type_setd(st_on, 3.0);
     assert(rc.status == TS_INCOMPATIBLE);
@@ -111,6 +113,7 @@ void test_state()
     assert(rc.status == TS_OK);
     assert(type_nom(st_on) == ON);
     st_on = rc.out;
+    assert(type_type(st_on) == STATE);
 
     rc = type_sum(st_on, st_on);
     assert(rc.status == TS_INCOMPATIBLE);
@@ -131,6 +134,7 @@ void test_coef()
     TypeResult rc;
     TypeValue coef = type_init(COEF);
     TypeValue one = type_init(COEF);
+    assert(type_type(one) == COEF);
 
     rc = type_seti(coef, -1000);
     assert(rc.status == TS_INCOMPATIBLE);
@@ -149,6 +153,7 @@ void test_coef()
     rc = type_setd(one, -1.11);
     assert(rc.status == TS_OK);
     one = rc.out;
+    assert(type_type(one) == COEF);
 
     rc = type_sum(coef, one);
     assert(rc.status == TS_OK);
@@ -209,7 +214,7 @@ void test_khz()
     TypeValue b = type_init(KHZ);
 
     a = type_setd(a, 6.8).out;
-    b = type_setd(a, -3.2).out;
+    b = type_setd(b, -3.2).out;
 
     rc = type_div(a, b);
     assert(rc.status == TS_OK);
