@@ -1,12 +1,12 @@
 #CFLAGS=-Wall -Wextra -pedantic -g -DTYPE_DECIMAL_DIGITS=4 -DTYPE_DECIMAL_POWER=10000
 #For C++ change to -std=c++20
 CFLAGS=-Wall -Wextra -pedantic -g -std=c99 -Og -fsanitize=undefined
+FFLAGS=-DTYPE_TIMESTAMP
 LFLAGS=-lm -lubsan
 TARGET=tests
 
-
 %.o : %.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) $(FFLAGS) -c $<
 
 $(TARGET) : main.o strongtypes.o
 	$(CC) -o $@ $^ $(LFLAGS)

@@ -21,6 +21,15 @@ enum States {
     ALL_STATES /* placeholder */
 };
 
+
+static type_millisecs timeMock = 0;
+
+/* Implementation for timestamp management */
+type_millisecs type_now(void)
+{
+    return timeMock;
+}
+
 struct TypeConf TYPE_CONFIG[ALL_TYPES];
 
 void init_typeconf()
@@ -256,6 +265,77 @@ void test_str()
     printf("OK\n");
 }
 
+void test_timestamp(void)
+{
+    char buf[TYPE_STR_LEN];
+
+    printf("test_timestamp: ");
+
+    timeMock = 100;
+
+    TypeValue in = type_init(HUGE);
+    TypeValue no = type_init(STATE);
+    TypeValue de = type_init(KHZ);
+
+    assert(type_get_time(in) == 0);
+    assert(type_get_time(no) == 0);
+    assert(type_get_time(de) == 0);
+
+    in = type_seti(in, 1234567890).out;
+    no = type_setn(no, OFF).out;
+    de = type_setd(de, 61234.32).out;
+
+    assert(type_get_time(in) == 100);
+    assert(type_get_time(no) == 100);
+    assert(type_get_time(de) == 100);
+
+    /* test readonly operation, the time is NOT updated */
+    timeMock = 200;
+
+    type_type(in);
+    type_type(no);
+    type_type(de);
+
+    assert(type_get_time(in) == 100);
+    assert(type_get_time(no) == 100);
+    assert(type_get_time(de) == 100);
+
+    type_int(in);
+    type_nom(no);
+    type_float(de);
+
+    assert(type_get_time(in) == 100);
+    assert(type_get_time(no) == 100);
+    assert(type_get_time(de) == 100);
+
+    type_str(buf, in);
+    type_str(buf, no);
+    type_str(buf, de);
+
+    assert(type_get_time(in) == 100);
+    assert(type_get_time(no) == 100);
+    assert(type_get_time(de) == 100);
+
+    /* math operation, must set the timestamp on the return */
+    timeMock = 300;
+
+    assert(type_get_time(type_sum(in, in).out) == 300);
+    assert(type_get_time(type_sum(de, de).out) == 300);
+
+    assert(type_get_time(type_mul(in, in).out) == 300);
+    assert(type_get_time(type_mul(de, de).out) == 300);
+
+    assert(type_get_time(type_div(in, in).out) == 300);
+    assert(type_get_time(type_div(de, de).out) == 300);
+
+    /* the input must be untouched */
+    assert(type_get_time(in) == 100);
+    assert(type_get_time(no) == 100);
+    assert(type_get_time(de) == 100);
+
+    printf("OK\n");
+}
+
 
 int main()
 {
@@ -268,6 +348,7 @@ int main()
     test_overflow();
     test_khz();
     test_str();
+    test_timestamp();
 
     return 0;
 }

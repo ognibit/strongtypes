@@ -114,43 +114,49 @@ void type_config(const struct TypeConf *table, int len)
     /* set globals */
     config = table;
     configLen = len;
-}
+}/* type_config */
 
 TypeValue type_init(int type)
 {
     assert(validate_type(type));
 
     TypeValue t = {.type = type, .value = 0};
+#ifdef TYPE_TIMESTAMP
+    t.timestamp = 0;
+#endif
     return t;
-}
+}/* type_init */
 
 int type_type(const TypeValue tv)
 {
     assert(validate_type(tv.type));
     return tv.type;
-}
+}/* type_type */
 
 type_value_store type_int(const TypeValue tv)
 {
     assert(validate_value(tv));
     return tv.value;
-}
+}/* type_int */
 
 double type_float(const TypeValue tv)
 {
     assert(validate_value(tv));
     return ((double)(tv.value)) / (double)TYPE_DECIMAL_POWER;
-}
+}/* type_float */
 
 int type_nom(const TypeValue tv)
 {
     assert(validate_value(tv));
     return tv.value;
-}
+}/* type_nom */
 
 TypeResult type_seti(const TypeValue tv, type_value_store v)
 {
     TypeValue t = {.type = tv.type, .value = v};
+#ifdef TYPE_TIMESTAMP
+    t.timestamp = type_now();
+#endif
     TypeResult res = {.status = TS_OK, .out = t};
 
     if ((validate_type(tv.type)) &&
@@ -165,7 +171,7 @@ TypeResult type_seti(const TypeValue tv, type_value_store v)
     }
 
     return res;
-}
+}/* type_seti */
 
 TypeResult type_setd(const TypeValue tv, double val)
 {
@@ -177,6 +183,9 @@ TypeResult type_setd(const TypeValue tv, double val)
     v = (v / cut) * cut; /* integer operations, remove righmost digits */
 
     TypeValue t = {.type = tv.type, .value = v};
+#ifdef TYPE_TIMESTAMP
+    t.timestamp = type_now();
+#endif
     TypeResult res = {.status = TS_OK, .out = t};
 
     if ((validate_type(tv.type)) &&
@@ -192,11 +201,14 @@ TypeResult type_setd(const TypeValue tv, double val)
     }
 
     return res;
-}
+}/* type_setd */
 
 TypeResult type_setn(const TypeValue tv, int name)
 {
     TypeValue t = {.type = tv.type, .value = name};
+#ifdef TYPE_TIMESTAMP
+    t.timestamp = type_now();
+#endif
     TypeResult res = {.status = TS_OK, .out = t};
 
     if ((validate_type(tv.type)) &&
@@ -211,7 +223,7 @@ TypeResult type_setn(const TypeValue tv, int name)
     }
 
     return res;
-}
+}/* type_setn */
 
 /* for internal use only, no input validation needed,
  * valid for INTEGER and DECIMAL since the last one is represented as long too
@@ -238,7 +250,7 @@ TypeResult value_sum(const TypeValue a, const TypeValue b)
     TypeResult res = {.status = status, .out = t};
 
     return res;
-}
+}/* value_sum */
 
 TypeResult type_sum(const TypeValue a, const TypeValue b)
 {
@@ -265,6 +277,10 @@ TypeResult type_sum(const TypeValue a, const TypeValue b)
         break;
     }/* switch */
 
+
+#ifdef TYPE_TIMESTAMP
+    res.out.timestamp = type_now();
+#endif
     return res;
 } /* type_sum */
 
@@ -291,7 +307,7 @@ TypeResult integer_mul(const TypeValue a, const TypeValue b)
     TypeResult res = {.status = status, .out = t};
 
     return res;
-}
+}/* integer_mul */
 
 /* for internal use only, no input validation needed */
 static
@@ -318,7 +334,7 @@ TypeResult decimal_mul(const TypeValue a, const TypeValue b)
     TypeResult res = {.status = status, .out = t};
 
     return res;
-}
+}/* decimal_mul */
 
 TypeResult type_mul(const TypeValue a, const TypeValue b)
 {
@@ -347,6 +363,9 @@ TypeResult type_mul(const TypeValue a, const TypeValue b)
         break;
     }/* switch */
 
+#ifdef TYPE_TIMESTAMP
+    res.out.timestamp = type_now();
+#endif
     return res;
 } /* type_mul */
 
@@ -412,6 +431,9 @@ TypeResult type_div(const TypeValue a, const TypeValue b)
         break;
     }/* switch */
 
+#ifdef TYPE_TIMESTAMP
+    res.out.timestamp = type_now();
+#endif
     return res;
 } /* type_div */
 
@@ -419,7 +441,7 @@ int type_dec_units(const TypeValue tv)
 {
     assert(config[tv.type].category == DECIMAL);
     return tv.value / TYPE_DECIMAL_POWER;
-}
+}/* type_dec_unites */
 
 int type_dec_decimals(const TypeValue tv)
 {
@@ -427,7 +449,7 @@ int type_dec_decimals(const TypeValue tv)
     int precision = config[tv.type].precision;
     type_value_store power = exp10((double)(TYPE_DECIMAL_DIGITS - precision));
     return (tv.value % TYPE_DECIMAL_POWER) / power;
-}
+}/* type_dec_decimals */
 
 /* Convert DECIMAL to string */
 static
@@ -440,7 +462,7 @@ void str_decimals(char *buf, const TypeValue tv)
     snprintf(buf, TYPE_STR_LEN-1, fmt,
                 type_dec_units(tv),
                 type_dec_decimals(tv));
-}
+}/* str_decimals */
 
 void type_str(char *buf, const TypeValue tv)
 {
@@ -459,3 +481,10 @@ void type_str(char *buf, const TypeValue tv)
         break;
     }/* switch */
 }/* type_str */
+
+#ifdef TYPE_TIMESTAMP
+type_millisecs type_get_time(const TypeValue tv)
+{
+    return tv.timestamp;
+}/* type_get_time */
+#endif
