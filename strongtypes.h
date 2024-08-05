@@ -10,12 +10,12 @@
 
 #define TYPE_STR_LEN    24
 
-typedef long long ValueStore;
+typedef long long type_value_store;
 
 /* General typed value container */
 struct TypeValue {
     int type;
-    ValueStore value;
+    type_value_store value;
 };
 
 enum TypeCategory {
@@ -33,8 +33,8 @@ enum TypeStatus {
 /* Configuration for a type */
 struct TypeConf {
     enum TypeCategory category;
-    ValueStore range_min;
-    ValueStore range_max;
+    type_value_store rangeMin;
+    type_value_store rangeMax;
     int precision; /* 0-6 */
 };
 
@@ -46,16 +46,16 @@ struct TypeResult {
 
 typedef struct TypeValue TypeValue;
 typedef struct TypeResult TypeResult;
-typedef ValueStore Decimal;
+typedef type_value_store type_decimal;
 
 /* create a decimal value, for range set, from a floating point */
-Decimal type_dec(double v);
+type_decimal type_dec(double v);
 
 /* Create the configuration for an INTEGER type */
-struct TypeConf type_conf_int(ValueStore min, ValueStore max);
+struct TypeConf type_conf_int(type_value_store min, type_value_store max);
 
 /* Create the configuration for a DECIMAL type */
-struct TypeConf type_conf_dec(Decimal min, Decimal max, int precision);
+struct TypeConf type_conf_dec(type_decimal min, type_decimal max, int precision);
 
 /* Create the configuration for a NOMINAL type.
  * count: the number of the possible categorical values.
@@ -81,7 +81,7 @@ TypeValue type_init(int type);
 int type_type(const TypeValue tv);
 
 /* get the integer value.  */
-ValueStore type_int(const TypeValue tv);
+type_value_store type_int(const TypeValue tv);
 
 /* get an approximation of the decimal value */
 double type_float(const TypeValue tv);
@@ -90,7 +90,7 @@ double type_float(const TypeValue tv);
 int type_nom(const TypeValue tv);
 
 /* create a copy with the integer value set.  */
-TypeResult type_seti(const TypeValue tv, ValueStore v);
+TypeResult type_seti(const TypeValue tv, type_value_store v);
 
 /* Set a decimal value, will be truncated to precision. */
 TypeResult type_setd(const TypeValue tv, double v);

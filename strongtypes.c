@@ -31,19 +31,19 @@
 #endif
 
 static const struct TypeConf *config = NULL;
-static int config_len = 0;
+static int configLen = 0;
 
 static
 bool validate_type(int type)
 {
-    return (type >= 0) && (type < config_len);
+    return (type >= 0) && (type < configLen);
 }
 
 static
 bool validate_range(const TypeValue tv)
 {
-    return (tv.value >= config[tv.type].range_min) &&
-           (tv.value <= config[tv.type].range_max);
+    return (tv.value >= config[tv.type].rangeMin) &&
+           (tv.value <= config[tv.type].rangeMax);
 }
 
 #ifndef NDEBUG
@@ -60,22 +60,22 @@ bool validate_precision(int precision)
 }
 #endif
 
-struct TypeConf type_conf_int(ValueStore min, ValueStore max)
+struct TypeConf type_conf_int(type_value_store min, type_value_store max)
 {
     struct TypeConf c = {.category=INTEGER,
-                         .range_min=min,
-                         .range_max=max,
+                         .rangeMin=min,
+                         .rangeMax=max,
                          .precision=0};
     return c;
 }
 
-struct TypeConf type_conf_dec(Decimal min, Decimal max, int precision)
+struct TypeConf type_conf_dec(type_decimal min, type_decimal max, int precision)
 {
     assert(validate_precision(precision));
 
     struct TypeConf c = {.category=DECIMAL,
-                         .range_min=min,
-                         .range_max=max,
+                         .rangeMin=min,
+                         .rangeMax=max,
                          .precision=precision};
     return c;
 }
@@ -84,13 +84,13 @@ struct TypeConf type_conf_nom(int count)
 {
     assert(count > 0);
     struct TypeConf c = {.category=NOMINAL,
-                         .range_min=0,
-                         .range_max=count,
+                         .rangeMin=0,
+                         .rangeMax=count,
                          .precision=0};
     return c;
 }
 
-Decimal type_dec(double v)
+type_decimal type_dec(double v)
 {
     return v * TYPE_DECIMAL_POWER;
 }
@@ -104,7 +104,7 @@ void type_config(const struct TypeConf *table, int len)
 
         /* can be equals in the corner case of a NOMINAL type with just
          * one possible value */
-        assert(table[i].range_min <= table[i].range_max);
+        assert(table[i].rangeMin <= table[i].rangeMax);
 
         assert(validate_precision(table[i].precision));
         assert((table[i].category != DECIMAL && table[i].precision == 0) ||
@@ -113,7 +113,7 @@ void type_config(const struct TypeConf *table, int len)
 
     /* set globals */
     config = table;
-    config_len = len;
+    configLen = len;
 }
 
 TypeValue type_init(int type)
@@ -130,7 +130,7 @@ int type_type(const TypeValue tv)
     return tv.type;
 }
 
-ValueStore type_int(const TypeValue tv)
+type_value_store type_int(const TypeValue tv)
 {
     assert(validate_value(tv));
     return tv.value;
@@ -148,7 +148,7 @@ int type_nom(const TypeValue tv)
     return tv.value;
 }
 
-TypeResult type_seti(const TypeValue tv, ValueStore v)
+TypeResult type_seti(const TypeValue tv, type_value_store v)
 {
     TypeValue t = {.type = tv.type, .value = v};
     TypeResult res = {.status = TS_OK, .out = t};
@@ -169,11 +169,11 @@ TypeResult type_seti(const TypeValue tv, ValueStore v)
 
 TypeResult type_setd(const TypeValue tv, double val)
 {
-    ValueStore v = type_dec(val);
+    type_value_store v = type_dec(val);
 
     /* enforce precision */
     int prec = config[tv.type].precision;
-    ValueStore cut = exp10((double)(TYPE_DECIMAL_DIGITS - prec));
+    type_value_store cut = exp10((double)(TYPE_DECIMAL_DIGITS - prec));
     v = (v / cut) * cut; /* integer operations, remove righmost digits */
 
     TypeValue t = {.type = tv.type, .value = v};
@@ -219,9 +219,9 @@ TypeResult type_setn(const TypeValue tv, int name)
 static
 TypeResult value_sum(const TypeValue a, const TypeValue b)
 {
-    ValueStore va = a.value;
-    ValueStore vb = b.value;
-    ValueStore sum = 0;
+    type_value_store va = a.value;
+    type_value_store vb = b.value;
+    type_value_store sum = 0;
     enum TypeStatus status = TS_OK;
 
     //sum = va + vb;
@@ -272,9 +272,9 @@ TypeResult type_sum(const TypeValue a, const TypeValue b)
 static
 TypeResult integer_mul(const TypeValue a, const TypeValue b)
 {
-    ValueStore va = a.value;
-    ValueStore vb = b.value;
-    ValueStore mul = 0;
+    type_value_store va = a.value;
+    type_value_store vb = b.value;
+    type_value_store mul = 0;
     enum TypeStatus status = TS_OK;
 
     //mul = va * vb;
@@ -297,9 +297,9 @@ TypeResult integer_mul(const TypeValue a, const TypeValue b)
 static
 TypeResult decimal_mul(const TypeValue a, const TypeValue b)
 {
-    ValueStore va = a.value;
-    ValueStore vb = b.value;
-    ValueStore mul = 0;
+    type_value_store va = a.value;
+    type_value_store vb = b.value;
+    type_value_store mul = 0;
     enum TypeStatus status = TS_OK;
 
     //mul = va * vb / POWER;
@@ -355,14 +355,14 @@ TypeResult decimal_div(const TypeValue a, const TypeValue b)
 {
     long double va = (long double)a.value;
     long double vb = (long double)b.value;
-    ValueStore div = 0;
+    type_value_store div = 0;
     enum TypeStatus status = TS_OK;
 
     div = (va / vb) * TYPE_DECIMAL_POWER;
 
     /* enforce precision */
     int prec = config[a.type].precision;
-    ValueStore cut = exp10((double)(TYPE_DECIMAL_DIGITS - prec));
+    type_value_store cut = exp10((double)(TYPE_DECIMAL_DIGITS - prec));
     div = (div / cut) * cut; /* integer operations, remove righmost digits */
 
     TypeValue t = {.type = a.type, .value = div};
@@ -425,7 +425,7 @@ int type_dec_decimals(const TypeValue tv)
 {
     assert(config[tv.type].category == DECIMAL);
     int precision = config[tv.type].precision;
-    ValueStore power = exp10((double)(TYPE_DECIMAL_DIGITS - precision));
+    type_value_store power = exp10((double)(TYPE_DECIMAL_DIGITS - precision));
     return (tv.value % TYPE_DECIMAL_POWER) / power;
 }
 
